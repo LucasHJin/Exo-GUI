@@ -99,8 +99,8 @@ void set_torque(float torq, uint32_t timeout_ms) {
     send_msg(0x0e, data, 8, false, timeout_ms);
 }
 
-encoder_val get_encoder_estimates(uint32_t timeout_ms) {
-    encoder_val val = {0};
+feedback get_encoder_estimates(uint32_t timeout_ms) {
+    feedback val = {0};
     
     //send reqeust for encoder values (pos and vel) 
     if (send_msg(0x09, NULL, 0, false, timeout_ms) != ESP_OK) {

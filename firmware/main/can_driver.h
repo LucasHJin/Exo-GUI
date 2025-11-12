@@ -6,7 +6,8 @@
 typedef struct {
     float pos;
     float vel;
-} encoder_val;
+    float torq;
+} feedback;
 
 esp_err_t init_can_driver(gpio_num_t tx_gpio, gpio_num_t rx_gpio);
 esp_err_t uninstall_can_driver();
@@ -18,5 +19,5 @@ void set_pos(float pos, float vel, float torq, float vel_scale, float torq_scale
 void set_pos_no_scale(float pos, float vel, float torq, uint32_t timeout_ms);
 void set_vel(float vel, float torq, uint32_t timeout_ms);
 void set_torque(float torq, uint32_t timeout_ms);
-encoder_val get_encoder_estimates(uint32_t timeout_ms);
+feedback get_encoder_estimates(uint32_t timeout_ms);
 float get_torque_estimate(uint32_t timeout_ms);

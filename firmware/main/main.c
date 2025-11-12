@@ -38,14 +38,17 @@ void app_main(void)
     }
 
     //TODO: send command in a loop
-    float pos = 0.0, vel = 0.0, torq = 0.0;
     const uint32_t timeout_ms = 10;
+    float target_pos = 0.0, target_vel = 0.0, target_torq = 0.0; 
+
     while (1) {
-        //send real-time encoder values to gui
-        encoder_val val = get_encoder_estimates(1);
-        float torq = get_torque_estimate(1);
+        //
+        feedback fb = get_encoder_estimates(1);
+        fb.torq = get_torque_estimate(1);
+
+        //display the data to gui
         char buf[64];
-        int n = sniprintf(buf, sizeof(buf), "%f,%f,%f\n", val.pos, val.vel, torq);
+        int n = sniprintf(buf, sizeof(buf), "%f,%f,%f\n", fb.pos, fb.vel, fb.torq);
         uart_write_bytes(uart_port, buf, n);
 
 
@@ -55,16 +58,16 @@ void app_main(void)
             switch (cmd_buf[0])
             {
             case 'T': 
-                torq = atof(cmd_buf + 1);
-                set_torque(torq, timeout_ms);
+                target_torq = atof(cmd_buf + 1);
+                set_torque(target_torq, timeout_ms);
                 break;
             case 'V':
-                vel = atof(cmd_buf + 1);
-                set_vel(vel, torq, timeout_ms);
+                target_vel = atof(cmd_buf + 1);
+                set_vel(target_vel, target_torq, timeout_ms);
                 break;
             case 'P':
-                pos = atof(cmd_buf + 1);
-                set_pos_no_scale(pos, vel, torq, timeout_ms);
+                target_pos = atof(cmd_buf + 1);
+                set_pos_no_scale(target_pos, target_vel, target_torq, timeout_ms);
                 break;
             default:
                 break;
