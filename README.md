@@ -13,6 +13,7 @@ Always reference the below three sites:
 
 Some useful sites to read:
 - [Closed Loop System Overview](https://v6.docs.ctr-electronics.com/en/latest/docs/api-reference/device-specific/talonfx/closed-loop-requests.html)
+- [Intro to PID](https://docs.wpilib.org/en/stable/docs/software/advanced-controls/introduction/introduction-to-pid.html)
 - [Basic PID and Profilling](https://v6.docs.ctr-electronics.com/en/latest/docs/api-reference/device-specific/talonfx/basic-pid-control.html)
 - [CAN Bus Explained](https://www.csselectronics.com/pages/can-bus-simple-intro-tutorial)
 
