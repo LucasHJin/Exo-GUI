@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        ".fantomasignore": "ignore",
+        "can_driver.h": "c"
+    }
+}

@@ -1,42 +1,87 @@
 import tkinter as tk
-from openpyxl import load_workbook
-from typing import List
+import serial
+import threading
 
-import functions as f
+#TODO: serial setup
+PORT = 'COM5'
+BAUD_RATE = 115200
 
-#wb_dir = '../excels/test.xlsx'
-#wb = load_workbook(wb_dir)
-#ws = wb.active
+s = serial.Serial(port=PORT, baudrate=BAUD_RATE, timeout=1)
 
-#assert ws is not None
-
-headers = ["head1", "head2"]
-
-#def init_excel():
-    #assert ws is not None
-    #for i, h in enumerate(headers, start=1):
-        #ws.cell(row=1, column=i, value = h)
-    #wb.save(wb_dir)
-
+#GUI below
 root = tk.Tk()
 root.title("Exo Software")
 root.geometry("500x300")
-root.config(bg="light blue")
-
-entries: List[tk.Entry] = []
-
-for i, text in enumerate(headers):
-    tk.Label(root, text=text).grid(row=i, column=0, padx=10, pady=5, sticky="w")
-    entry = tk.Entry(root)
-    entry.grid(row=i, column=1, padx=10, pady=5)
-    entries.append(entry)
 
 
-submit_btn = tk.Button(
-    root,
-    text="Submit",
-    #command=lambda: f.insert(wb_dir, entries)
-)
-submit_btn.grid(row=len(headers), column=1, pady=20)
+err_label = tk.Label(root)
+#values read from encoder
+pos_label = tk.Label(root, text="Position: 0.0 rev")
+vel_label = tk.Label(root, text="Velocity: 0.0 rev/s")
+torq_label = tk.Label(root, text="Torque: 0.0 Nm")
+
+#make form to send target position 
+target_pos_label = tk.Label(root, text="Target Pos: ")
+pos_entry = tk.Entry(root)
+
+def send_pos():
+    pos_str = pos_entry.get()
+    try:
+        pos = float(pos_str)
+        line = f"P{pos}\n" #start with P to siganl pos
+        s.write(line.encode('utf-8'))
+    except ValueError as err:
+        err_label.config(text=f"Error: {err}")
+
+send_btn = tk.Button(root, text='Set pos', command=send_pos)
+
+#make form to send target velocity
+target_vel_label = tk.Label(root, text="Target vel: ")
+vel_entry = tk.Entry(root)
+
+def send_vel():
+    vel_str = vel_entry.get()
+    try:
+        vel = float(vel_str)
+        line = f"V{vel}\n" #start with V to signal vel
+        s.write(line.encode('utf-8'))
+    except ValueError as err:
+        err_label.config(text=f"Error: {err}")
+
+send_vel_btn = tk.Button(root, text='Set vel', command=send_vel)
+
+#make form to send target position 
+target_torq_label = tk.Label(root, text="Target torque: ")
+torq_entry = tk.Entry(root)
+
+def send_torq():
+    torq_str = torq_entry.get()
+    try:
+        torq = float(torq_str)
+        line = f"T{torq}\n" #start with P to siganl pos
+        s.write(line.encode('utf-8'))
+    except ValueError as err:
+        err_label.config(text=f"Error: {err}")
+
+send_btn = tk.Button(root, text='Set torq', command=send_torq)
+
+#run serial loop
+def serial_loop():
+    while True:
+        line = s.readline().decode('utf-8').strip()
+        if line:
+            try:
+                pos_str, vel_str, torq_str = line.split(',')
+                pos = float(pos_str)
+                vel = float(vel_str)
+                torq = float(torq_str)
+                pos_label.config(text=f"Pos: {pos:.3f} rev")
+                vel_label.config(text=f"Velocity: {vel:.3f} rev/s")
+                torq_label.config(text=f"Torque: {torq:.3f} Nm")
+            except ValueError as err:
+                err_label.config(text=F"Error: {err}")
+
+thread = threading.Thread(target=serial_loop, daemon=True)
+thread.start()
 
 root.mainloop()
