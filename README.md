@@ -5,6 +5,7 @@
 - **Driver (motor controller)**: ODrive S1
 
 **Documentation / References**
+
 Always reference the below three sites:
 - [CAN Protocol](https://docs.odriverobotics.com/v/latest/manual/can-protocol.html)
 - [CAN BUS guide](https://docs.odriverobotics.com/v/latest/guides/can-guide.html)
