@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <driver/twai.h>
 #include <driver/gpio.h>
+#include <string.h>
 
 typedef struct {
     float pos;

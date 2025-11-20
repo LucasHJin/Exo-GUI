@@ -37,15 +37,11 @@ esp_err_t stop_can_driver() {
     msg.identifier = id;
     msg.extd = extended;
     msg.data_length_code = length;
-    memcpy(msg.data, data, length);
+    memcpy(msg.data, &data, length);
 
     //queue message for transmission
     esp_err_t res = twai_transmit(&msg, pdMS_TO_TICKS(timeout_ms));
-    if (res == ESP_OK) {
-        printf("CAN message sent (ID: %d, len: %d)", id, length);
-    } else {
-        printf("Failed to send CAN message (ID: %d)", id);
-    }
+ 
     return res;
 }
 
@@ -95,7 +91,7 @@ void set_vel(float vel, float torq, uint32_t timeout_ms) {
 
 void set_torque(float torq, uint32_t timeout_ms) {
     uint8_t data[8];
-    memcpy(&data[0], torq, 4);
+    memcpy(&data[0], &torq, 4);
     send_msg(0x0e, data, 8, false, timeout_ms);
 }
 
@@ -128,6 +124,6 @@ float get_torque_estimate(uint32_t timeout_ms) {
     
     float val = 0.0;
     //first 4 bytes: target torque, last 4 bytes: torque estimate
-    memcpy(val, &rx.data[4], 4);
+    memcpy(&val, &rx.data[4], 4);
     return val;
 }
