@@ -22,3 +22,6 @@ void set_vel(float vel, float torq, uint32_t timeout_ms);
 void set_torque(float torq, uint32_t timeout_ms);
 feedback get_encoder_estimates(uint32_t timeout_ms);
 float get_torque_estimate(uint32_t timeout_ms);
+void set_limits (float vel_limit, float curr_limit, uint32_t timeout_ms);
+void set_traj_vel_limit(float traj_vel_limit, uint32_t timeout_ms);
+void set_traj_accel_limit(float traj_accel_limit, float traj_decel_limit, uint32_t timeout_ms);

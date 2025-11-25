@@ -127,3 +127,30 @@ float get_torque_estimate(uint32_t timeout_ms) {
     memcpy(&val, &rx.data[4], 4);
     return val;
 }
+
+void set_limits (float vel_limit, float curr_limit, uint32_t timeout_ms) {
+    uint8_t data[8];
+
+    memcpy(&data[0], &vel_limit, 4);
+    memcpy(&data[4], &curr_limit, 4);
+
+    send_msg(0x0f, data, 8, false, timeout_ms);
+}
+
+void set_traj_vel_limit(float traj_vel_limit, uint32_t timeout_ms) {
+    uint8_t data[8] = {0};
+
+    memcpy(&data[0], &traj_vel_limit, 4);
+    
+    send_msg(0x11, data, 8, false, timeout_ms);
+}
+
+void set_traj_accel_limit(float traj_accel_limit, float traj_decel_limit, uint32_t timeout_ms) {
+    uint8_t data[8];
+
+    memcpy(&data[0], &traj_accel_limit, 4);
+    memcpy(&data[4], &traj_decel_limit, 4);
+
+    send_msg(0x12, data, 8, 0, timeout_ms);
+}
+
