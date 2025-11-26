@@ -12,12 +12,16 @@ qt_add_executable(appgui
     main.cpp
 )
 
+file(GLOB_RECURSE QML_SRC
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}   
+    qml/*.qml
+)
+
 qt_add_qml_module(appgui
-    URI gui
-    QML_FILES
-        Main.qml
-        SOURCES
-        QML_FILES MyTextInput.qml
+    URI 
+        gui
+    QML_FILES 
+        ${QML_SRC}
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
